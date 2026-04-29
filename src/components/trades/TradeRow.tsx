@@ -16,15 +16,20 @@ export const TradeRow = memo(function TradeRow({
   side,
 }: TradeRowProps) {
   const timeStr = formatSimTime(time);
-  const colorClass = side === "buy" ? "text-green-400" : "text-red-400";
+  const isBuy = side === "buy";
+  const colorClass = isBuy ? "text-buy" : "text-sell";
 
   return (
-    <div className="flex items-center h-5 text-[11px] hover:bg-slate-700/50 px-2 border-b border-slate-700/30">
-      <span className="w-16 text-slate-500 font-mono">{timeStr}</span>
-      <span className={`w-20 text-right font-mono ${colorClass}`}>
+    <div
+      className={`grid grid-cols-[72px_1fr_72px] px-3 py-0.5 h-5 text-[11px] font-mono border-b border-term-border/30 data-row cursor-pointer animate-slide-in-right ${
+        isBuy ? "animate-flash-up" : "animate-flash-down"
+      }`}
+    >
+      <span className="text-slate-500">{timeStr}</span>
+      <span className={`text-right font-bold pr-4 ${colorClass}`}>
         {formatPrice(price)}
       </span>
-      <span className="w-16 text-right text-slate-400 font-mono">
+      <span className="text-right text-slate-400">
         {formatVolume(volume)}
       </span>
     </div>

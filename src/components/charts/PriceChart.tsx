@@ -12,7 +12,7 @@ import type {
   HistogramData,
   Time,
 } from "lightweight-charts";
-import { useCandles, useCurrentCandle } from "../../hooks/useSimulation";
+import { useCandles, useCurrentCandle, useSelectedStockId, useStockList } from "../../hooks/useSimulation";
 
 export function PriceChart() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,27 +21,31 @@ export function PriceChart() {
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
   const candles = useCandles();
   const currentCandle = useCurrentCandle();
+  const selectedId = useSelectedStockId();
+  const stocks = useStockList();
+  const stock = stocks.find((s) => s.stockId === selectedId);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     const chart = createChart(containerRef.current, {
       layout: {
-        background: { color: "#1e293b" },
+        background: { color: "#131a24" },
         textColor: "#94a3b8",
       },
       grid: {
-        vertLines: { color: "#334155" },
-        horzLines: { color: "#334155" },
+        vertLines: { color: "#1a2435" },
+        horzLines: { color: "#1a2435" },
       },
       width: containerRef.current.clientWidth,
       height: 400,
       timeScale: {
         timeVisible: true,
         secondsVisible: false,
+        borderColor: "#1a2435",
       },
       rightPriceScale: {
-        borderColor: "#475569",
+        borderColor: "#1a2435",
       },
       crosshair: {
         mode: 0,
@@ -49,10 +53,10 @@ export function PriceChart() {
     });
 
     const candleSeries = chart.addSeries(CandlestickSeries, {
-      upColor: "#22c55e",
-      downColor: "#ef4444",
-      wickUpColor: "#22c55e",
-      wickDownColor: "#ef4444",
+      upColor: "#10b981",
+      downColor: "#f43f5e",
+      wickUpColor: "#10b981",
+      wickDownColor: "#f43f5e",
       borderVisible: false,
     });
 
@@ -101,7 +105,7 @@ export function PriceChart() {
       const volData: HistogramData[] = candles.map((c) => ({
         time: (c.time / 60) as Time,
         value: c.volume,
-        color: c.close >= c.open ? "#22c55e44" : "#ef444444",
+        color: c.close >= c.open ? "rgba(16,185,129,0.3)" : "rgba(244,63,94,0.3)",
       }));
       vs.setData(volData);
     }
@@ -119,8 +123,8 @@ export function PriceChart() {
         value: currentCandle.volume,
         color:
           currentCandle.close >= currentCandle.open
-            ? "#22c55e44"
-            : "#ef444444",
+            ? "rgba(16,185,129,0.3)"
+            : "rgba(244,63,94,0.3)",
       });
     }
 
@@ -128,9 +132,21 @@ export function PriceChart() {
   }, [candles, currentCandle]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full rounded-lg overflow-hidden border border-slate-700"
-    />
+    <div className="panel flex-1 bg-term-panel border border-term-border rounded-lg flex flex-col overflow-hidden min-h-[300px]">
+      <div className="h-10 shrink-0 border-b border-term-border flex items-center px-4 bg-white/[0.01]">
+        <div className="flex items-baseline gap-2">
+          <h1 className="text-lg font-bold text-white tracking-tight">
+            {stock?.stockId ?? selectedId}
+          </h1>
+          <span className="text-[10px] text-slate-400 font-medium">
+            {stock?.name ?? ""}
+          </span>
+        </div>
+      </div>
+      <div
+        ref={containerRef}
+        className="flex-1 w-full"
+      />
+    </div>
   );
 }

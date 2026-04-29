@@ -12,7 +12,7 @@ export const BidLadder = memo(function BidLadder({
   maxVolume,
 }: BidLadderProps) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col justify-start flex-1">
       {levels.map((level, i) => (
         <OrderBookRow
           key={`bid-${i}`}

@@ -17,38 +17,34 @@ export const OrderBookRow = memo(function OrderBookRow({
   maxVolume,
   side,
 }: OrderBookRowProps) {
-  // Placeholder row — render empty to maintain visual spacing
   if (price === 0) {
     return (
-      <div className="relative h-6 flex items-center text-xs border-b border-slate-700/50">
-        <span className="w-24 pl-2 text-slate-600">--</span>
-        <span className="w-20 text-right text-slate-600">--</span>
-        <span className="w-12 text-right text-slate-600">--</span>
+      <div className="relative flex items-center h-6 text-[11px]">
+        <span className="w-full pl-3 text-slate-600">--</span>
+        <span className="w-16 text-right text-slate-600 pr-4">--</span>
+        <span className="w-12 text-right text-slate-600 pr-1">--</span>
       </div>
     );
   }
 
-  const widthPct = maxVolume > 0 ? (volume / maxVolume) * 100 : 0;
-  const barColor =
-    side === "bid" ? "bg-green-500/20" : "bg-red-500/20";
-  const textColor =
-    side === "bid" ? "text-green-400" : "text-red-400";
+  const widthPct = maxVolume > 0 ? Math.min(100, (volume / maxVolume) * 100) : 0;
+  const isAsk = side === "ask";
+  const textColor = isAsk ? "text-sell" : "text-buy";
+  const bgClass = isAsk ? "bg-sell-dim" : "bg-buy-dim";
 
   return (
-    <div className="relative h-6 flex items-center text-xs border-b border-slate-700/50">
+    <div className="relative flex items-center justify-between pl-3 pr-1 h-6 text-[11px] cursor-pointer data-row group">
       <div
-        className={`absolute inset-y-0 ${
-          side === "bid" ? "right-0" : "left-0"
-        } ${barColor}`}
+        className={`absolute inset-y-0 right-0 ${bgClass}`}
         style={{ width: `${widthPct}%` }}
       />
-      <span className={`relative z-10 w-24 pl-2 font-mono ${textColor}`}>
+      <span className={`z-10 font-bold ${textColor}`}>
         {formatPrice(price)}
       </span>
-      <span className="relative z-10 w-20 text-right text-slate-300 font-mono">
+      <span className="z-10 text-right text-slate-300 w-16 pr-4">
         {formatVolume(volume)}
       </span>
-      <span className="relative z-10 w-12 text-right text-slate-500">
+      <span className="z-10 text-right text-slate-500 w-12 group-hover:text-white transition-colors">
         {orderCount}
       </span>
     </div>

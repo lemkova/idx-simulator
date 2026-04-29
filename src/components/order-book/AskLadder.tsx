@@ -14,7 +14,7 @@ export const AskLadder = memo(function AskLadder({
   const rows = [...levels].reverse();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col justify-end flex-1">
       {rows.map((level, i) => (
         <OrderBookRow
           key={`ask-${i}`}

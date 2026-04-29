@@ -70,26 +70,24 @@ export default function AppShell() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col h-full">
       <Header
         onReset={() => {
           simRef.current?.reset();
           simStore.setState({ isRunning: false });
         }}
       />
-      <div className="flex-1 grid grid-cols-[1fr_340px] gap-3 p-3">
-        <div className="flex flex-col gap-3">
-          <div className="grid grid-cols-[380px_1fr] gap-3">
-            <OrderBook />
-            <PriceChart />
-          </div>
+      <main className="flex-1 w-full max-w-[1920px] mx-auto p-2 xl:p-3 grid grid-cols-1 lg:grid-cols-[340px_1fr] xl:grid-cols-[360px_1fr_320px] gap-2 xl:gap-3 overflow-hidden min-h-0">
+        <OrderBook />
+        <section className="flex flex-col gap-2 xl:gap-3 min-h-0">
+          <PriceChart />
           <MarketOverview />
-        </div>
-        <aside className="flex flex-col gap-3">
+        </section>
+        <aside className="hidden xl:flex flex-col gap-3 min-h-0">
           <TradeTape />
           <AgentMonitor />
         </aside>
-      </div>
+      </main>
     </div>
   );
 }
