@@ -12,8 +12,8 @@ export interface LiquidityProviderConfig {
 }
 
 const DEFAULT_CONFIG: LiquidityProviderConfig = {
-  levels: 7,
-  lotsPerLevel: 25,
+  levels: 15,
+  lotsPerLevel: 15,
 };
 
 export class LiquidityProvider {
@@ -70,9 +70,10 @@ export class LiquidityProvider {
     const newOrders: Order[] = [];
     let orderIdx = 0;
 
-    // Place bids below fair price
+    // Place bids below fair price — skewed tighter near mid
     for (let i = 0; i < levels; i++) {
-      const offset = tickSize * (i + 1);
+      const ticks = Math.max(1, Math.round(Math.pow(i + 1, 1.6)));
+      const offset = tickSize * ticks;
       const price = fairPrice - offset;
       if (price <= 0) continue;
 
@@ -81,9 +82,10 @@ export class LiquidityProvider {
       );
     }
 
-    // Place asks above fair price
+    // Place asks above fair price — skewed tighter near mid
     for (let i = 0; i < levels; i++) {
-      const offset = tickSize * (i + 1);
+      const ticks = Math.max(1, Math.round(Math.pow(i + 1, 1.6)));
+      const offset = tickSize * ticks;
       const price = fairPrice + offset;
 
       newOrders.push(

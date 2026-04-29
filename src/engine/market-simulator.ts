@@ -55,7 +55,7 @@ export class MarketSimulator {
       );
       this.currentHawkesIntensities[sc.stockId] =
         config.hawkesParams.mu;
-      this.lps.set(sc.stockId, new LiquidityProvider({ levels: 7 }));
+      this.lps.set(sc.stockId, new LiquidityProvider());
     }
 
     this.agents = createAgentPool();
@@ -116,7 +116,7 @@ export class MarketSimulator {
     for (const [id, sc] of this.stocks) {
       this.stocks.set(id, this.initStockState(sc.config));
       this.hawkes.get(id)?.reset();
-      this.lps.set(id, new LiquidityProvider({ levels: 7 }));
+      this.lps.set(id, new LiquidityProvider());
     }
     this.agents = createAgentPool();
   }
@@ -271,7 +271,7 @@ export class MarketSimulator {
     };
 
     for (const [id, stock] of this.stocks) {
-      const { bids, asks } = getSnapshot(stock.orderBook, 7);
+      const { bids, asks } = getSnapshot(stock.orderBook);
       const spread =
         asks.length > 0 && bids.length > 0
           ? asks[0].price - bids[0].price

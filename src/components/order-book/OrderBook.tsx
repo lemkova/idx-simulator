@@ -5,8 +5,6 @@ import { AskLadder } from "./AskLadder";
 import { BidLadder } from "./BidLadder";
 import { SpreadIndicator } from "./SpreadIndicator";
 
-const DEPTH = 7;
-
 export function OrderBook() {
   const snapshot = useOrderBook();
   const selectedId = useSelectedStockId();
@@ -21,10 +19,7 @@ export function OrderBook() {
     );
   }
 
-  const paddedAsks = padLevels(snapshot.asks, DEPTH);
-  const paddedBids = padLevels(snapshot.bids, DEPTH);
-
-  const allLevels = [...paddedAsks, ...paddedBids];
+  const allLevels = [...snapshot.asks, ...snapshot.bids];
   const maxVol = Math.max(...allLevels.map((l) => l.totalQuantity), 1);
 
   return (
@@ -47,22 +42,15 @@ export function OrderBook() {
         <span className="text-right">#</span>
       </div>
 
-      <div className="flex-1 flex flex-col overflow-hidden relative text-[11px] font-mono leading-none">
-        <AskLadder levels={paddedAsks} maxVolume={maxVol} />
+      <div className="flex-1 grid grid-rows-[1fr_auto_1fr] overflow-hidden text-[11px] font-mono leading-none min-h-0">
+        <div className="overflow-y-auto no-scrollbar min-h-0">
+          <AskLadder levels={snapshot.asks} maxVolume={maxVol} />
+        </div>
         <SpreadIndicator spread={snapshot.spread} midPrice={snapshot.midPrice} />
-        <BidLadder levels={paddedBids} maxVolume={maxVol} />
+        <div className="overflow-y-auto no-scrollbar min-h-0">
+          <BidLadder levels={snapshot.bids} maxVolume={maxVol} />
+        </div>
       </div>
     </div>
   );
-}
-
-function padLevels(
-  levels: { price: number; totalQuantity: number; orderCount: number }[],
-  target: number
-) {
-  const padded = [...levels];
-  while (padded.length < target) {
-    padded.push({ price: 0, totalQuantity: 0, orderCount: 0 });
-  }
-  return padded.slice(0, target);
 }

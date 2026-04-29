@@ -11,11 +11,10 @@ export const AskLadder = memo(function AskLadder({
   levels,
   maxVolume,
 }: AskLadderProps) {
-  const rows = [...levels].reverse();
-
+  // Natural order (best ask first), justify-end anchors best ask at bottom near spread
   return (
-    <div className="flex flex-col justify-end flex-1">
-      {rows.map((level, i) => (
+    <div className="flex flex-col justify-end min-h-full">
+      {levels.map((level, i) => (
         <OrderBookRow
           key={`ask-${i}`}
           price={level.price}

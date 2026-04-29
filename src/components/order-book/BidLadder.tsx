@@ -11,8 +11,9 @@ export const BidLadder = memo(function BidLadder({
   levels,
   maxVolume,
 }: BidLadderProps) {
+  // Natural order (best bid first), natural top alignment near spread
   return (
-    <div className="flex flex-col justify-start flex-1">
+    <div className="flex flex-col min-h-full">
       {levels.map((level, i) => (
         <OrderBookRow
           key={`bid-${i}`}

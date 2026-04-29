@@ -72,14 +72,13 @@ export function removeOrder(
 }
 
 export function getSnapshot(
-  book: OrderBookData,
-  depth: number
+  book: OrderBookData
 ): { bids: PriceLevel[]; asks: PriceLevel[] } {
   function toLevels(
     prices: Price[],
     map: Map<Price, Order[]>
   ): PriceLevel[] {
-    return prices.slice(0, depth).map((price) => {
+    return prices.map((price) => {
       const orders = map.get(price)!;
       return {
         price,
